@@ -18,23 +18,26 @@
             <div class="product-image">
                 <img :src="image" 
                     :title="description" 
-                    :class="{ 'out-of-stock-img': !varProductAvailable}">
+                    :class="{ 'out-of-stock-img': !productAvailable}">
             </div>
             <div class="product-info">
-                <h1>{{message}}</h1>
-                <p v-if="inventory > 10">In stock</p>
-                <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
-                <p v-else="inventory = 0">Out of stock</p>
+                <h2>{{title}}</h2>
+                <h4>{{sale}}</h4>
+                <p v-if="(inventory-cart) > 10">In stock ( {{(inventory-cart)}} )</p>
+                <p v-else-if="(inventory-cart) <= 10 && (inventory-cart) > 0">Almost sold out! ( {{(inventory-cart)}} )</p>
+                <p v-else>Out of stock</p>
                 <ul>
                     <li v-for="detail in details" >{{ detail }}</li>
                 </ul>
-                <div v-for="variant in variants" 
+
+                <div v-for="(variant, index) in variants"
                     :key="variant.id" 
-                    @mouseOver="updateImage(variant.image)"
+                    @mouseOver="updateVariant(index)"
                     class="color-circle"
                     :style="{backgroundColor: variant.color}"></div>
-                <button class="button" 
-                    :class="{ disabledButton: (inventory==0 || cart==inventory) }" 
+                <button class="button"
+                        :disabled="!productAvailable"
+                    :class="{ disabledButton: !productAvailable }"
                     @click="addToCart">Add to Cart</button>
                 <button class="button" @click="removeCart" :disabled="cart == 0">Remove Cart</button>
             </div>
